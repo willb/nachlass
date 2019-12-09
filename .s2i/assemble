@@ -2,6 +2,8 @@ cp -R /tmp/src/* /opt/sms/
 
 cd /opt/sms 
 
+echo NOTEBOOK LIST IS "${S2I_SOURCE_NOTEBOOK_LIST}"
+
 echo EXTRA REQUIREMENTS ARE:
 cat /opt/sms/requirements.txt
 
@@ -11,6 +13,9 @@ app/bin/pip install "cloudpickle == 0.5.3" "flask"
 process_each_first() {
     local IFS=","
     vals=$1
+    
+    echo "### preprocessing notebook $v"
+    
     for v in $vals; do
         python3 $(which jupyter) nbconvert --to script ${v}
     done
@@ -36,6 +41,9 @@ process_each_second() {
     else
         echo "," >> /opt/sms/stages.json
     fi
+    
+    echo "### executing notebook $v"
+    
     export S2I_PIPELINE_STAGE_SAVE_FILE=$(basename $v .ipynb).sav
     app/bin/python ./$(basename ${v} .ipynb).py
     echo "[\"${v}\", \"${S2I_PIPELINE_STAGE_SAVE_FILE}\"]" >> /opt/sms/stages.json
@@ -48,4 +56,4 @@ echo "]" >> /opt/sms/stages.json
 
 echo "### stages.json follows"
 cat /opt/sms/stages.json
- 
+     
