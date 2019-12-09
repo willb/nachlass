@@ -61,7 +61,9 @@ def regressor_prediction_recorder(p):
 try:
     import json
     from sklearn.pipeline import Pipeline
-    app.model = Pipeline([(k, cPload(open(v, "rb"))) for k, v in json.load(open("stages.json", "r"))])
+    stages = json.load(open("stages.json", "r"))
+    print("stages are: %r" % stages)
+    app.model = Pipeline([(k, cPload(open(v, "rb"))) for k, v in stages])
     if app.model.steps[-1][1]._estimator_type == 'classifier':
         pm = Counter('%s_predictions_total' % METRICS_PREFIX, 'Total predictions for a given label', ['value'])
         app.observe_prediction = classifier_prediction_recorder(pm)
@@ -71,7 +73,15 @@ try:
         
       
 except Exception as e:
+    import time
+    import os
+    
     print(str(e))
+    
+    if os.environ.get("NACHLASS_DEBUG") is not None:
+        print("Sleeping for ten minutes")
+        time.sleep(600)
+    
     sys.exit()
 
 app_dispatch = DispatcherMiddleware(app, {

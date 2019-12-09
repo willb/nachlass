@@ -45,3 +45,7 @@ process_each_second() {
 echo "[" > /opt/sms/stages.json
 process_each_second ${S2I_SOURCE_NOTEBOOK_LIST}
 echo "]" >> /opt/sms/stages.json
+
+echo "### stages.json follows"
+cat /opt/sms/stages.json
+ 
