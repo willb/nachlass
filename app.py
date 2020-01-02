@@ -39,7 +39,6 @@ def predict():
     try:
         predictions = app.model.predict(args)
         for v in predictions:
-            # FIXME:  this assumes a classifier!  we want to be more flexible
             app.observe_prediction(v)
         return json.dumps(predictions.tolist())
     except ValueError as ve:
