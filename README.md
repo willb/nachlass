@@ -73,9 +73,6 @@ To build a model service, use `s2i` (or a source build strategy in OpenShift) an
 
 If your notebooks require access to nonpublic data, they will need to pass credentials and service endpoints in the build environment or in Kubernetes secrets.  (Small, nonsensitive data sets may be stored in the `git` repo alongside models.)
 
-### Publishing your own models
-
-
 ## Work in progress
 
 Our work in progress includes:
